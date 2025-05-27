@@ -4,7 +4,11 @@ require("dotenv").config(); // Load .env variables
 const express = require("express");
 const mysql = require("mysql2");
 const app = express();
-
+// Listen on dynamic port from environment or 3000
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 app.use(express.json());
 
 const db = mysql.createConnection({
@@ -24,21 +28,7 @@ db.connect((err) => {
   console.log("Connected to MySQL database");
 });
 
-// Sample route
-app.get("/products", (req, res) => {
-  db.query("SELECT * FROM products", (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Database query failed" });
-    }
-    res.json(results);
-  });
-});
 
-// Listen on dynamic port from environment or 3000
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
 
 // Get all products
 app.get("/products", (req, res) => {
